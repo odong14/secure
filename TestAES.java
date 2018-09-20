@@ -13,7 +13,7 @@ import java.security.Security;
  */
 public class TestAES {
   public static void main(String[] args) throws Exception {
-      String hexKey = "YOUR_KEY";  
+      String hexKey = "LALA";  
       String hexIv = "YOUR_IV";  
       String text = "Sample text";  
       String hexEncodedText = string2Hex(text);//convert it to HEX  
