@@ -1,0 +1,1 @@
+ieu mah jang diajar hungkul
