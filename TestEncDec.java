@@ -17,7 +17,7 @@ public class TestEncDec {
         for(byte i = 0; i < DataNumber; i++){
             plain[i] = (byte)(rand.nextInt(256) - 128);
         }
-        System.out.println("Plainaa data:");
+        System.out.println("Plainaaodong data:");
         for(byte i = 0; i < DataNumber; i++){
             System.out.print(plain[i] + " ");
         }
