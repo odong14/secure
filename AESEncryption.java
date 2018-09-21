@@ -1,5 +1,3 @@
-package com.example.ridhanta.callprojectfix;
-
 import java.nio.ByteBuffer;
 import java.security.SecureRandom;
 

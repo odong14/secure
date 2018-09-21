@@ -2,68 +2,63 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.security.Security;
 
- import javax.crypto.Cipher;  
- import javax.crypto.SecretKey;  
- import javax.crypto.spec.IvParameterSpec;  
- import javax.crypto.spec.SecretKeySpec;  
- import javax.xml.bind.DatatypeConverter;  
+import java.util.Random;
+import java.lang.reflect.Array;
 
-/**
- * Basic IO example with CTR using AES
- */
+import javax.crypto.Cipher;  
+import javax.crypto.SecretKey;  
+import javax.crypto.spec.IvParameterSpec;  
+import javax.crypto.spec.SecretKeySpec;  
+import javax.xml.bind.DatatypeConverter;  
+
 public class TestAES {
+
   public static void main(String[] args) throws Exception {
-      String hexKey = "LALA";  
-      String hexIv = "YOUR_IV";  
-      String text = "Sample text";  
-      String hexEncodedText = string2Hex(text);//convert it to HEX  
-   
-      //create AES key  
-      SecretKey key = new SecretKeySpec(DatatypeConverter.parseHexBinary(hexKey), "AES");  
-        
-      //create AES IV  
-      IvParameterSpec ivspec = new IvParameterSpec(DatatypeConverter.parseHexBinary(hexIv));  
-   
-      //define cipher mode  
-      Cipher cipher = Cipher.getInstance("AES/CTR/NOPADDING");  
-      cipher.init(Cipher.ENCRYPT_MODE, key, ivspec);  
-   
-      //encode  
-      byte[] result = cipher.doFinal(DatatypeConverter.parseHexBinary(hexEncodedText));  
-   
-      String out = DatatypeConverter.printHexBinary(result);  
-      String hexOut=string2Hex(out);  
-      //print out the encrypted text  
-      System.out.println(hex2String(hexOut));  
+    Random rand = new Random();
+    int DataNumber = 32;
+    int LongKeyByte = 32;
+    byte[] plain = new byte[DataNumber];
+    byte[] key = new byte[LongKeyByte];
+    
+    //Generate dummy data
+    for(byte i = 0; i < DataNumber; i++){
+        plain[i] = (byte)(rand.nextInt(256) - 128);
     }
+    System.out.println("Plain data:");
+    for(byte i = 0; i < DataNumber; i++){
+        System.out.print(plain[i] + " ");
+    }
+    System.out.println("");
 
+    //Generate dummy key 
+    for(byte i = 0; i < LongKeyByte; i++){
+        key[i] = (byte)(rand.nextInt(256) - 128);
+    }
+    System.out.println("key:");
+    for(byte i = 0; i < LongKeyByte; i++){
+        System.out.print(key[i] + " ");
+    }
+    System.out.println("");
 
- public static String string2Hex(String str){  
-         
-       char[] chars = str.toCharArray();  
+    byte[] encryptedData = AESEncryption.encrypt(key,plain);
+
+    //Print encrypted data 
+    System.out.println("encrypted:");
+    for(byte i = 0; i < encryptedData.length; i++){
+        System.out.print(encryptedData[i] + " ");
+    }
+    System.out.println("");
+
+    byte[] decryptedData = AESEncryption.decrypt(key,encryptedData);
     
-       StringBuffer hex = new StringBuffer();  
-       for(int i = 0; i < chars.length; i++){  
-           hex.append(Integer.toHexString((int)chars[i]));  
-       }  
-    
-       return hex.toString();  
-  }  
-   
-public static String hex2String(String hex){  
-         
-       StringBuilder sb = new StringBuilder();  
-         
-       /*two hex characters for each ASCII one*/  
-       for( int i=0; i<hex.length()-1; i+=2 ){  
-    
-            String output = hex.substring(i, (i + 2));  
-            int decimal = Integer.parseInt(output, 16);  
-            sb.append((char)decimal);  
-       }  
-    
-       return sb.toString();  
+    //Print encrypted data 
+    System.out.println("decrypted:");
+    for(byte i = 0; i < decryptedData.length; i++){
+      System.out.print(decryptedData[i] + " ");
+    }
+    System.out.println("");
   } 
+ 
 }
 
 
