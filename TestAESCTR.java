@@ -17,7 +17,7 @@ import javax.xml.bind.DatatypeConverter;
 public class TestAESCTR{
     public static void main(String [] args) throws Exception {
     Random rand = new Random();
-    int DataNumber = 30;
+    int DataNumber = 10;
     int LongKeyByte = 32;
     int LongNounceAndCounter = 16;
     byte[] plain = new byte[DataNumber];
@@ -25,31 +25,44 @@ public class TestAESCTR{
     byte[] nonceAndCounter = new byte[LongNounceAndCounter];
     
     //Generate dummy data
-    for(byte i = 0; i < DataNumber; i++){
+    for(int i = 0; i < DataNumber; i++){
         plain[i] = (byte)(rand.nextInt(256) - 128);
     }
     System.out.println("Plain data:");
-    for(byte i = 0; i < DataNumber; i++){
+    for(int i = 0; i < DataNumber; i++){
         System.out.print(plain[i] + " ");
     }
     System.out.println("");
 
     //Generate dummy key 
-    for(byte i = 0; i < LongKeyByte; i++){
+    for(int i = 0; i < LongKeyByte; i++){
         keyBytes[i] = (byte)(rand.nextInt(256) - 128);
     }
     System.out.println("key:");
-    for(byte i = 0; i < LongKeyByte; i++){
+    for(int i = 0; i < LongKeyByte; i++){
         System.out.print(keyBytes[i] + " ");
     }
     System.out.println("");
 
+    //Generate dummy nonce
+    int longnonce = 12;
+    byte[] nonce = new byte[longnonce];
+
+    for(byte i = 0; i < longnonce; i++){
+        nonce[i] = (byte)(rand.nextInt(256) - 128);
+    }
+    System.out.println("nonce:");
+    for(int i = longnonce - 1; i != 0; i--){
+        System.out.print(nonce[i] + " ");
+    }
+    System.out.println("");
+    
 
     //Generate dummy nonceAndCounter 
-    Arrays.fill(nonceAndCounter, (byte) 0);
+    nonceAndCounter = NonceCnt.generate(1500983, nonce);
 
     System.out.println("Nonce and Counter:");
-    for(byte i = 0; i < LongNounceAndCounter; i++){
+    for(int i = LongNounceAndCounter - 1; i != 0; i--){
         System.out.print(nonceAndCounter[i] + " ");
     }
     System.out.println("");
@@ -58,7 +71,7 @@ public class TestAESCTR{
     
     //Print encrypted data
     System.out.println("Encrypted data:");
-    for(byte i = 0; i < encrypted.length; i++){
+    for(int i = 0; i < encrypted.length; i++){
         System.out.print(encrypted[i] + " ");
     }
     System.out.println("");
@@ -67,7 +80,7 @@ public class TestAESCTR{
 
     //Print decrypted data
     System.out.println("Decrypted data:");
-    for(byte i = 0; i < decrypted.length; i++){
+    for(int i = 0; i < decrypted.length; i++){
         System.out.print(decrypted[i] + " ");
     }
     System.out.println("");
