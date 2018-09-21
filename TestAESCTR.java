@@ -52,17 +52,18 @@ public class TestAESCTR{
         nonce[i] = (byte)(rand.nextInt(256) - 128);
     }
     System.out.println("nonce:");
-    for(int i = longnonce - 1; i != 0; i--){
+    for(int i = longnonce - 1; i > -1; i--){
         System.out.print(nonce[i] + " ");
     }
     System.out.println("");
     
-
+    for (int j = 0; j < 10; j++){
+    System.out.println("Iterasi ke "+j);
     //Generate dummy nonceAndCounter 
-    nonceAndCounter = NonceCnt.generate(1500983, nonce);
+    nonceAndCounter = NonceCnt.generate(j, nonce);
 
     System.out.println("Nonce and Counter:");
-    for(int i = LongNounceAndCounter - 1; i != 0; i--){
+    for(int i = LongNounceAndCounter - 1; i > -1; i--){
         System.out.print(nonceAndCounter[i] + " ");
     }
     System.out.println("");
@@ -84,5 +85,6 @@ public class TestAESCTR{
         System.out.print(decrypted[i] + " ");
     }
     System.out.println("");
+    }
     }
 }
