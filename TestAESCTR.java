@@ -17,7 +17,7 @@ import javax.xml.bind.DatatypeConverter;
 public class TestAESCTR{
     public static void main(String [] args) throws Exception {
     Random rand = new Random();
-    int DataNumber = 32;
+    int DataNumber = 30;
     int LongKeyByte = 32;
     int LongNounceAndCounter = 16;
     byte[] plain = new byte[DataNumber];
@@ -54,24 +54,8 @@ public class TestAESCTR{
     }
     System.out.println("");
 
-    SecretKeySpec key = new SecretKeySpec(keyBytes, "AES");
-    IvParameterSpec ivSpec = new IvParameterSpec(nonceAndCounter);
-    Cipher cipher = Cipher.getInstance("AES/CTR/NoPadding");
-
-    // encryption pass
-    cipher.init(Cipher.ENCRYPT_MODE, key, ivSpec);
-    ByteArrayInputStream bIn = new ByteArrayInputStream(plain);
-    CipherInputStream cIn = new CipherInputStream(bIn, cipher);
-    ByteArrayOutputStream bOut = new ByteArrayOutputStream();
-
-    int ch;
-    while ((ch = cIn.read()) >= 0) {
-      bOut.write(ch);
-    }
-
-    byte[] cipherText = bOut.toByteArray();
-    byte[] encrypted = bOut.toByteArray();
-
+    byte[] encrypted = AESCTR.encrypt(keyBytes, plain, nonceAndCounter);
+    
     //Print encrypted data
     System.out.println("Encrypted data:");
     for(byte i = 0; i < encrypted.length; i++){
@@ -79,14 +63,7 @@ public class TestAESCTR{
     }
     System.out.println("");
 
-    // decryption pass
-    cipher.init(Cipher.DECRYPT_MODE, key, ivSpec);
-    bOut = new ByteArrayOutputStream();
-    CipherOutputStream cOut = new CipherOutputStream(bOut, cipher);
-    cOut.write(cipherText);
-    cOut.close();
-    
-    byte[] decrypted = bOut.toByteArray();
+    byte[] decrypted = AESCTR.decrypt(keyBytes, encrypted, nonceAndCounter);
 
     //Print decrypted data
     System.out.println("Decrypted data:");
