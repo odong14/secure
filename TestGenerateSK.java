@@ -17,7 +17,7 @@ import javax.xml.bind.DatatypeConverter;
 public class TestGenerateSK{
     public static void main(String argv[]) throws Exception{
         Random rand = new Random();
-        int DataNumber = 10;
+        int DataNumber = 52;
         int LongKeyByte = 32;
         int LongNounceAndCounter = 16;
         byte[] plain = new byte[DataNumber];
@@ -50,6 +50,5 @@ public class TestGenerateSK{
             System.out.print(SessionK[i] + " ");
         }
         System.out.println("");
-
     }
 }
