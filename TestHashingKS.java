@@ -34,14 +34,27 @@ public class TestHashingKS {
         }
         System.out.println("");
 
-        byte[] hased = HashingKS.hashing256(plain);
+        byte[] hased = Hashing.hashingKS(plain);
 
         //Print hashed data
+        System.out.println("Test Hashing KS");
         System.out.println("Hashed data:");
         for(int i = 0; i < hased.length; i++){
             System.out.print(hased[i] + " ");
         }
         System.out.println("");
         System.out.println("Panjang hashed :" + hased.length + "byte");
+
+        
+        byte[] hasedKM = Hashing.hashingKM(hased,plain);
+
+        //Print hashed data
+        System.out.println("Test Hashing KM");
+        System.out.println("Hashed data:");
+        for(int i = 0; i < hasedKM.length; i++){
+            System.out.print(hasedKM[i] + " ");
+        }
+        System.out.println("");
+        System.out.println("Panjang hashed :" + hasedKM.length + "byte");
     }
 }
