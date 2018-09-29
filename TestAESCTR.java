@@ -77,8 +77,8 @@ public class TestAESCTR{
         System.out.print(encrypted[i] + " ");
     }
     System.out.println("");
-    //String lala = ByteString.of(encrypted, 0, encrypted.length);
-    byte[] decrypted = AESCTR.decrypt(keyBytes, encrypted, nonceAndCounter);
+
+    byte[] decrypted = AESCTR.decrypt(keyBytes, encrypted);
 
     //Print decrypted data
     System.out.println("Decrypted data:");
