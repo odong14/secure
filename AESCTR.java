@@ -12,7 +12,7 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;  
 import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
-import javax.xml.bind.DatatypeConverter;  
+//import javax.xml.bind.DatatypeConverter;  
 
 public class AESCTR {
     public static byte[] encrypt(byte [] keyBytes, byte [] plain, byte[] nonceAndCounter)throws Exception {
@@ -46,5 +46,24 @@ public class AESCTR {
         cOut.close();
 
         return bOut.toByteArray();
+    }
+
+    final protected static char[] hexArray = "0123456789abcdef".toCharArray();
+	public static String bytesToHex(byte[] bytes) {
+		char[] hexChars = new char[bytes.length * 2];
+		for ( int j = 0; j < bytes.length; j++ ) {
+			int v = bytes[j] & 0xFF;
+			hexChars[j * 2] = hexArray[v >>> 4];
+			hexChars[j * 2 + 1] = hexArray[v & 0x0F];
+		}
+		return new String(hexChars);
+    }
+    public static String viewKS(byte[] key){
+        byte panjangView = 3;
+        byte[] temp = new byte[panjangView];
+        String balikan; 
+        System.arraycopy(key,(key.length - panjangView),temp,0,panjangView);
+        balikan = bytesToHex(temp);
+        return balikan;
     }
 }
