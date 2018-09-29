@@ -12,7 +12,8 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;  
 import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
-import javax.xml.bind.DatatypeConverter;  
+//import com.google.protobuf.ByteString; 
+//import javax.xml.bind.DatatypeConverter;  
 
 public class TestAESCTR{
     public static void main(String [] args) throws Exception {
@@ -57,7 +58,7 @@ public class TestAESCTR{
     }
     System.out.println("");
     
-    for (int j = 0; j < 10; j++){
+    for (int j = 0; j < 2; j++){
     System.out.println("Iterasi ke "+j);
     //Generate dummy nonceAndCounter 
     nonceAndCounter = NonceCnt.generate(j, nonce);
@@ -76,7 +77,7 @@ public class TestAESCTR{
         System.out.print(encrypted[i] + " ");
     }
     System.out.println("");
-
+    //String lala = ByteString.of(encrypted, 0, encrypted.length);
     byte[] decrypted = AESCTR.decrypt(keyBytes, encrypted, nonceAndCounter);
 
     //Print decrypted data
@@ -86,5 +87,8 @@ public class TestAESCTR{
     }
     System.out.println("");
     }
+
+    String lastbyte = AESCTR.viewKS(keyBytes);
+    System.out.println("3 last key byte " + lastbyte);
     }
 }
