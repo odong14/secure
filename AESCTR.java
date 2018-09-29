@@ -20,6 +20,10 @@ public class AESCTR {
         IvParameterSpec ivSpec = new IvParameterSpec(nonceAndCounter);
         Cipher cipher = Cipher.getInstance("AES/CTR/NoPadding");
         ByteArrayOutputStream bOut = new ByteArrayOutputStream();
+        int panjangPlain = plain.length;
+        int panjangNnCnt = nonceAndCounter.length;
+        int panjangNP    = panjangPlain + panjangNnCnt;
+        byte[] IVPencrypted = new byte[panjangNP];
         
         cipher.init(Cipher.ENCRYPT_MODE, key, ivSpec);
         ByteArrayInputStream bIn = new ByteArrayInputStream(plain);
@@ -29,17 +33,28 @@ public class AESCTR {
         while ((ch = cIn.read()) >= 0) {
             bOut.write(ch);
         }
+        
+        System.arraycopy(bOut.toByteArray(),0,IVPencrypted,panjangNnCnt,panjangPlain);
+        System.arraycopy(nonceAndCounter,0,IVPencrypted,0,panjangNnCnt);
 
-        return bOut.toByteArray();
+        return IVPencrypted;
     }
 
-    public static byte[] decrypt(byte [] keyBytes, byte [] encrypted, byte[] nonceAndCounter) throws Exception{
+    public static byte[] decrypt(byte [] keyBytes, byte [] IVPencrypted) throws Exception{
+        int panjangNnCnt = 16;
+        int panjangEncd  = IVPencrypted.length - panjangNnCnt;
+        byte[] encrypted = new byte[panjangEncd];
+        byte[] nonceAndCounter = new byte[panjangNnCnt];
+
+        System.arraycopy(IVPencrypted,0,nonceAndCounter,0,panjangNnCnt);
+        System.arraycopy(IVPencrypted,panjangNnCnt,encrypted,0,panjangEncd);
+
         SecretKeySpec key = new SecretKeySpec(keyBytes, "AES");
         IvParameterSpec ivSpec = new IvParameterSpec(nonceAndCounter);
         Cipher cipher = Cipher.getInstance("AES/CTR/NoPadding");
         ByteArrayOutputStream bOut = new ByteArrayOutputStream(encrypted.length);
         
-       cipher.init(Cipher.DECRYPT_MODE, key, ivSpec);
+        cipher.init(Cipher.DECRYPT_MODE, key, ivSpec);
         bOut = new ByteArrayOutputStream();
         CipherOutputStream cOut = new CipherOutputStream(bOut, cipher);
         cOut.write(encrypted);
