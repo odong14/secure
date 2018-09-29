@@ -43,41 +43,22 @@ public class Hashing{
     }
 
     public static byte[] hashingKM(byte[] hA, byte[] SavedKM) throws Exception{
-        Sha512 hash512 = new Sha512();
         Sha256 hash256 = new Sha256();
 
-        int panjangBalikan = 16;
+        int panjangBalikan = 32;
         int panjanghA = hA.length;
         int panjangSavedKM = SavedKM.length;
         int panjangMasukanHash = panjanghA + panjangSavedKM;
-
         byte[] balikan = new byte[panjangBalikan];
-        byte[] MasukanHash = new byte[panjangMasukanHash];
-
+        
         hash256.update(SavedKM, 0, SavedKM.length);
-        byte[] digestSavedKM = hash256.digest();
+        byte[] SavedKMHashed = hash256.digest();
+        
+        hash256.update(hA, 0, hA.length);
+        byte[] hAHashed = hash256.digest();
     
-        System.arraycopy(digestSavedKM,0,MasukanHash,0,digestSavedKM.length);
-        System.arraycopy(hA,0,MasukanHash,digestSavedKM.length,hA.length);
-        
-        hash512.update(MasukanHash, 0, MasukanHash.length);
-        byte[] digest = hash512.digest();
-        byte[] Z1 = new byte[panjangBalikan];
-        byte[] Z2 = new byte[panjangBalikan];
-        byte[] Z3 = new byte[panjangBalikan];
-        byte[] Z4 = new byte[panjangBalikan];
-        int temp = 0;
-
-        System.arraycopy(digest,temp,Z1,0,panjangBalikan);
-        temp += panjangBalikan;
-        System.arraycopy(digest,temp,Z2,0,panjangBalikan);
-        temp += panjangBalikan;
-        System.arraycopy(digest,temp,Z3,0,panjangBalikan);
-        temp += panjangBalikan;
-        System.arraycopy(digest,temp,Z4,0,panjangBalikan);
-        
         for(int i = 0; i < panjangBalikan; i++){
-            balikan[i] = (byte)(Z1[i] ^ Z2[i] ^ Z3[i] ^ Z4[i]);
+            balikan[i] = (byte)(SavedKMHashed[i] ^ hAHashed[i]);
         }
 
         return balikan;
