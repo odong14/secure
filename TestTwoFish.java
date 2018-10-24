@@ -4,7 +4,7 @@ import java.security.InvalidKeyException;
 
 public class TestTwoFish {
 public static void main(String argv[]) throws Exception {
-String key = "1234567812345678";
+String key = "12345678123456781234567812345678";
 String plaintext = "I am text to be hidden away";
 String cipher = encrypt(plaintext,key);
 System.out.println("Encrypted plaint text:");
