@@ -16,7 +16,7 @@ import javax.crypto.CipherOutputStream;
 public class TestTwoFish256{
     public static void main(String [] args) throws Exception {
     Random rand = new Random();
-    int DataNumber = 16;
+    int DataNumber = 1;
     int LongKeyByte = 32;
     int LongNounceAndCounter = 16;
     int blockSize = 16; 
@@ -25,7 +25,6 @@ public class TestTwoFish256{
     int offset;
     byte[] plain = new byte[DataNumber];
     byte[] keyBytes = new byte[LongKeyByte];
-    byte[] nonceAndCounter = new byte[LongNounceAndCounter];
     Twofish twofish = new Twofish();
     PKCS7 padding = new PKCS7();
     NonceCnt noncent = new NonceCnt();
@@ -69,7 +68,19 @@ public class TestTwoFish256{
     } else {
         lengthBlock = (plain.length / 16) + 1;
     }
+    byte[] nonceAndCounter = new byte[LongNounceAndCounter * lengthBlock];
+    
+    for(int i = 0; i < lengthBlock; i++){
+        byte[] temp = noncent.generate(i,nonce);
+        System.arraycopy(temp, 0, nonceAndCounter, i * blockSize, blockSize);
+    }
 
+    System.out.println("nonce:");
+    for(int i = nonceAndCounter.length - 1; i > -1; i--){
+        System.out.print(nonceAndCounter[i] + " ");
+    }
+    System.out.println("");
+    
     //Add padding if need
     //Teu dipake
     padding.init(blockSize);
@@ -79,10 +90,9 @@ public class TestTwoFish256{
     System.arraycopy(pad, 0, pt, plain.length, pad.length);
 
     offset = 0;
-    byte[] encrypted = new byte[plain.length];
-    for (int i=0; i<Array.getLength(plain); i+=blockSize) {
-        nonceAndCounter = noncent.generate(offset+i,nonce);
-        twofish.encrypt(nonceAndCounter, 0, encrypted, 0, keyObject, blockSize);
+    byte[] encrypted = new byte[nonceAndCounter.length];
+    for (int i=0; i<Array.getLength(nonceAndCounter); i+=blockSize) {
+        twofish.encrypt(nonceAndCounter, i, encrypted, i, keyObject, blockSize);
     }
     
     //Print encrypted data
@@ -91,10 +101,13 @@ public class TestTwoFish256{
         System.out.print(encrypted[i] + " ");
     }
     System.out.println("");
+    
+    byte[] outXOR = new byte[plain.length];
 
     //Xor data
-    for(int i = 0; i < encrypted.length; i++){
+    for(int i = 0; i < plain.length; i++){
         encrypted[i] = (byte)(encrypted[i] ^ plain[i]);
+        outXOR[i] = encrypted[i];
     }
 
     //Print encrypted data
@@ -107,9 +120,13 @@ public class TestTwoFish256{
     Object keydecObject = twofish.makeKey(keyBytes, 16);
     byte[] decrypted = new byte[encrypted.length];
     
+    for(int i = 0; i < lengthBlock; i++){
+        byte[] temp = noncent.generate(i,nonce);
+        System.arraycopy(temp, 0, nonceAndCounter, i * blockSize, blockSize);
+    }
+
     offset = 0;
     for (int i=0; i<Array.getLength(encrypted); i+=16) {
-        nonceAndCounter = noncent.generate(offset+i,nonce);
         twofish.encrypt(nonceAndCounter, i, decrypted, i, keydecObject, 16);
     }
 
@@ -129,13 +146,13 @@ public class TestTwoFish256{
     System.out.println("");
 
     //Xor data
-    for(int i = 0; i < encrypted.length; i++){
-        decrypted[i] = (byte)(encrypted[i] ^ decrypted[i]);
+    for(int i = 0; i < outXOR.length; i++){
+        decrypted[i] = (byte)(outXOR[i] ^ decrypted[i]);
     }
     
     //Print decrypted data
     System.out.println("XOR Decrypted data:");
-    for(int i = 0; i < decrypted.length; i++){
+    for(int i = 0; i < outXOR.length; i++){
         System.out.print(decrypted[i] + " ");
     }
     System.out.println("");
