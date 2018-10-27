@@ -15,7 +15,22 @@ public class NonceCnt{
         return nonceandcnt; 
     }
 
-    public static final byte[] intToByteArray(long value) {
+    public static int getCnt(byte[] nonceCnt){
+        byte[] cntByte = new byte[4];
+        int cnt;
+        System.arraycopy(nonceCnt, 0, cntByte, 0, 4);
+        cntByte = reversePosition(cntByte);
+        cnt = byteArrayToInt(cntByte);
+        return cnt;
+    }
+
+    public static byte[] getNonce(byte[] nonceCnt){
+        byte[] nonce = new byte[12];
+        System.arraycopy(nonceCnt, 4, nonce, 0, 12);
+        return nonce;
+    }
+
+    private static final byte[] intToByteArray(long value) {
     return new byte[] {
             (byte)(value >>> 24),
             (byte)(value >>> 16),
@@ -23,7 +38,11 @@ public class NonceCnt{
             (byte)value};
     }
 
-    public static byte[] reversePosition(byte[] data){
+    private static final int byteArrayToInt(byte[] value) {
+        return value[0] << 24 | (value[1] & 0xFF)  << 16 | (value[2] & 0xFF)  << 8 | (value[3] & 0xFF); 
+    }
+
+    private static byte[] reversePosition(byte[] data){
         byte[] temp = new byte[data.length];
         int cnt = data.length - 1;
 
@@ -32,4 +51,5 @@ public class NonceCnt{
         }
         return temp;
     }
+
 }
