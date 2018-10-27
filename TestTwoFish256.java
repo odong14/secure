@@ -62,7 +62,7 @@ public class TestTwoFish256{
         System.out.print(nonce[i] + " ");
     }
     System.out.println("");
-
+    
     if(plain.length % blockSize == 0){
         lengthBlock = plain.length / 16;
     } else {
